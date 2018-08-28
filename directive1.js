@@ -41,8 +41,10 @@ angular.module('D3Demo').directive('circlePaking', function () {
 			  var focus = root,
 				  nodes = pack(root).descendants(),
 				  view;
-
 				
+				console.log("******************");
+				console.log(nodes);
+				console.log(typeof nodes);
 
 			  var circle = g.selectAll("circle")
 				.data(nodes)
@@ -108,6 +110,7 @@ angular.module('D3Demo').directive('circlePaking', function () {
 				var k = diameter / v[2]; view = v;
 				node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
 				circle.attr("r", function(d) { return d.r * k; });
+				circle.attr("class", "outerCircle");
 			  }
 			});
 		}
