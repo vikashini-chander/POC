@@ -21,3 +21,24 @@ path.girls {
 	fill : #ffffff;
 	stroke : #000000;
 }
+
+#accordion .body{
+   padding : 10px;
+   border-top : 1px solid #ccc;
+}
+#accordion .header{
+   margin-bottom : 0px;
+   padding : 5px;
+   background-color : #ccc;
+   border : 0px !important;
+}
+
+#accordion .active .body {
+   display : block;
+}
+
+#accordion .panel{
+  border : solid 1px #D6D6D6;
+  margin:5px;
+  border-radius : 2px;
+}

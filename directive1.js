@@ -1,13 +1,22 @@
-/* D3.js+Angular.JS Demo. Copyright (c) 2014 Uri Shaked, MIT Licence. */
-
 'use strict';
 
-angular.module('D3Demo').directive('circlePaking', function () {
+angular.module('app').directive('circlePaking', function () {
 	return {
-		restrict : 'AE',
-		template : "<svg width='800' height='800'></svg> <div id='description' style='position: fixed; top: 40%; right: 0%; width:300px;'></div>",
-		link: function (scope, element, attr) {
-				
+		restrict : 'E',		
+		scope: {
+            cid: '@'
+        },
+		template : "<svg width='800' height='800' style='float:left'></svg> <div style='float:left'><div id='description' style='position: relative; top: 40%; right: 0%; width:300px;'></div><div id='accordion'><div class='panel'><div class='header' ng-click='toggleContent()'>Header</div><div class='body' id='toggleSection'>body of panel 2</div></div><div></div>",
+		link: function (scope, element, attr,accordion) {
+			document.getElementById('toggleSection').style.display = 'none';
+			scope.toggleContent = function(){
+				if(document.getElementById('toggleSection').style.display == 'none'){
+					document.getElementById('toggleSection').style.display = 'block';
+				}else{
+					document.getElementById('toggleSection').style.display = 'none';
+				}
+			}
+			
 			document.getElementById('description').innerHTML = '<h3>Summary</h3>BNYM does not currently have any local depositaries established in Denmark.  If you wish to explore the possibility of a BNYM Entity providing these types of depositary services in Denmark, please contact the BNYM legal team for further information and advice on a case-by-case basis.'
 			var svg = d3.select("svg"),
 				margin = 20,
@@ -21,56 +30,35 @@ angular.module('D3Demo').directive('circlePaking', function () {
 
 			var color2 = d3.scaleLinear()
 				.domain([1,2,3,4,5])
-				.range(["red", "orange", "yellow"])
+				.range(["green", "orange", "yellow"])
 				.interpolate(d3.interpolateHcl);
 				
-
 			var pack = d3.pack()
 				.size([diameter - margin, diameter - margin])
 				.padding(2);
-
-			d3.json('./circlePacking.json', function(error, root) {
-			  if (error) throw error;
-
-			  // root = d3.hierarchy(root)
-				//   .sum(function(d) { return d.size; })
-				//   .sort(function(a, b) { return b.value - a.value; });
-				root = d3.hierarchy(root)
-				  .sum(function(d) { return d.size; });
-
-			  var focus = root,
-				  nodes = pack(root).descendants(),
-				  view;
-				
-				console.log("******************");
-				console.log(nodes);
-				console.log(typeof nodes);
-
-			  var circle = g.selectAll("circle")
+			
+			d3.json(attr.cid, function(error, root) {
+					if (error) throw error;
+					root = d3.hierarchy(root).sum(function(d) { return d.size; });
+					
+					var focus = root,
+					nodes = pack(root).descendants(),
+					view;
+			var circle = g.selectAll("circle")
 				.data(nodes)
 				.enter().append("circle")
-				  // .attr("class", function(d) { 
-					// 	return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; 
-					// })
 				  .style("fill", function(d) { 
 						return d.children && d.depth === 2 ? color(d.data.finalSize) : d.depth === 3? color2(d.data.finalSize):null ; 
 					})
 					.on("click", function(d) { if (focus !== d) {
 						zoom(d);
-						console.log(d);
-					//	if(d.depth === 3){
 						if(typeof d.data.details !== 'undefined') {
-							console.log(' message for ' + d.data.details);
-
-
-							document.getElementById('description').innerHTML='<h3>' + d.data.name+ '</h3>' + d.data.details.body;
+							document.getElementById('description').innerHTML='<h3>' + d.data.name+ '</h3>' + d.data.details;
 							document.getElementById('description').style.display= 'block';
-
 						} else{
 							document.getElementById('description').style.display= 'none';
 						}
 						d3.event.stopPropagation();
-
 					}});
 
 			  var text = g.selectAll("text")
@@ -82,7 +70,6 @@ angular.module('D3Demo').directive('circlePaking', function () {
 				  .text(function(d) { return d.data.name; });
 
 			  var node = g.selectAll("circle,text");
-
 			  svg
 				  .style("background", color('300'))
 				  .on("click", function() { zoom(root); });
@@ -112,7 +99,9 @@ angular.module('D3Demo').directive('circlePaking', function () {
 				circle.attr("r", function(d) { return d.r * k; });
 				circle.attr("class", "outerCircle");
 			  }
-			});
+					
+				});
+			
 		}
 	};
 });
