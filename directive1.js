@@ -6,7 +6,7 @@ angular.module('app').directive('circlePaking', function () {
 		scope: {
             cid: '@'
         },
-		template : "<svg width='800' height='800' style='float:left'></svg> <div style='float:left'><div id='description' style='position: relative; top: 40%; right: 0%; width:300px;'></div><div id='accordion'><div class='panel'><div class='header' ng-click='toggleContent()'>Header</div><div class='body' id='toggleSection'>body of panel 2</div></div><div></div>",
+		template : "<svg width='800' height='800' style='float:left'></svg> <div style='float:left'><div id='description' style='position: relative; top: 40%; right: 0%; width:300px;'><div id='summary'></div><div id='accordion'><div class='panel'><div class='header' ng-click='toggleContent()'>Header</div><div class='body' id='toggleSection'>body of panel 2</div></div></div></div>",
 		link: function (scope, element, attr,accordion) {
 			document.getElementById('toggleSection').style.display = 'none';
 			scope.toggleContent = function(){
@@ -17,7 +17,7 @@ angular.module('app').directive('circlePaking', function () {
 				}
 			}
 			
-			document.getElementById('description').innerHTML = '<h3>Summary</h3>BNYM does not currently have any local depositaries established in Denmark.  If you wish to explore the possibility of a BNYM Entity providing these types of depositary services in Denmark, please contact the BNYM legal team for further information and advice on a case-by-case basis.'
+			document.getElementById('summary').innerHTML = '<h3>Summary</h3>BNYM does not currently have any local depositaries established in Denmark.  If you wish to explore the possibility of a BNYM Entity providing these types of depositary services in Denmark, please contact the BNYM legal team for further information and advice on a case-by-case basis.'
 			var svg = d3.select("svg"),
 				margin = 20,
 				diameter = +svg.attr("width"),
